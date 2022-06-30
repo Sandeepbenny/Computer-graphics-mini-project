@@ -16,18 +16,21 @@ static int spin = 0;
 static int obj = PAGE;
 static int begin;
 
-void print(int x, int y, char *string)
+void *currentfont;
+void setFont(void *font)
 {
-//set the position of the text in the window using the x and y coordinates
-glRasterPos2f(80, 2800);
-//get the length of the string to display
-int len = (int) strlen(string);
-for (int i = 0; i&lt; len; i++) 
+ currentfont=font;                      // Set the currentfont to the font
+}
+void drawstring(float x,float y,float z,char *string)
 {
-	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,string[i]);
+ char *c;
+ glRasterPos3f(80, 2800,0);
+ for(c=string;*c!='\0';c++)
+ { glColor3f(1.0,1.0,1.0);
+  glutBitmapCharacter(currentfont,*c);
+ }
 }
 
-}
 void
 output(GLfloat x, GLfloat y, char *format,...)
 {
@@ -88,6 +91,15 @@ glutCreateWindow("OBJECTS AND LIGHT");
 void
 display(void)
 {
+
+	  output(80, 2800, "Welcome ");
+          output(80, 2650, "Right mouse button for menu.");
+          output(80, 400, "Hold down the left mouse button");
+          output(80, 250, "and move the mouse horizontally");
+          output(80, 100, "to change the light position.");
+          printf("WELCOME");
+	glPopMatrix();
+	glFlush();	
   glClearColor(0.0,0.0,0.0,0.0);
   glFlush();
   glClear(GL_COLOR_BUFFER_BIT);
@@ -113,19 +125,20 @@ display(void)
 
   switch (obj) {
     case PAGE:
-        glPrint(score);
-        glClearColor(0.0,0.0,0.0,0.0);
-        glColor3f (1.0, 0.0, 0.0);
+         glColor3f(1.0,0.0,1.0);
+	 drawstring(150.0,455.0,1.0,"* * * * * * * * * * THE DRAWSTRING FUNCTION DEMO * * * * * * * * * *");
 	  output(80, 2800, "Welcome to OBJECTS AND LIGHT");
           output(80, 2650, "Right mouse button for menu.");
           output(80, 400, "Hold down the left mouse button");
           output(80, 250, "and move the mouse horizontally");
           output(80, 100, "to change the light position.");
+          printf("pp");
 	glPopMatrix();
 	glFlush();	
 
 	break;
     case TORUS:
+    output(80, 2800, "Welcome to OBJECTS AND LIGHT");
     glutSolidTorus(0.275, 0.85, 20, 20);
     break;
   case TEAPOT:
@@ -152,7 +165,6 @@ display(void)
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-    glPrint("SCORE:",score);
   gluOrtho2D(0, 3000, 0, 3000);
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
